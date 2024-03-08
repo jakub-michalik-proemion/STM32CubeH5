@@ -105,9 +105,9 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  BSP_LED_Init(LED1);
-  BSP_LED_Init(LED2);
-  BSP_LED_Init(LED3);
+//  BSP_LED_Init(LED1);
+//  BSP_LED_Init(LED2);
+//  BSP_LED_Init(LED3);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -352,13 +352,13 @@ static void MX_OCTOSPI1_Init(void)
   hospi1.Instance = OCTOSPI1;
   hospi1.Init.FifoThresholdByte = 4;
   hospi1.Init.MemoryMode = HAL_XSPI_SINGLE_MEM;
-  hospi1.Init.MemoryType = HAL_XSPI_MEMTYPE_MACRONIX;
-  hospi1.Init.MemorySize = HAL_XSPI_SIZE_8MB;
+  hospi1.Init.MemoryType = HAL_XSPI_MEMTYPE_MICRON;
+  hospi1.Init.MemorySize = HAL_XSPI_SIZE_128MB;
   hospi1.Init.ChipSelectHighTimeCycle = 1;
   hospi1.Init.FreeRunningClock = HAL_XSPI_FREERUNCLK_DISABLE;
   hospi1.Init.ClockMode = HAL_XSPI_CLOCK_MODE_0;
   hospi1.Init.WrapSize = HAL_XSPI_WRAP_NOT_SUPPORTED;
-  hospi1.Init.ClockPrescaler = 1;
+  hospi1.Init.ClockPrescaler = 10;
   hospi1.Init.SampleShifting = HAL_XSPI_SAMPLE_SHIFT_NONE;
   hospi1.Init.DelayHoldQuarterCycle = HAL_XSPI_DHQC_ENABLE;
   hospi1.Init.ChipSelectBoundary = HAL_XSPI_BONDARYOF_NONE;
@@ -386,10 +386,10 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOG_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
@@ -547,6 +547,15 @@ static void OSPI_OctalModeCfg(XSPI_HandleTypeDef *hospi)
   {
     Error_Handler();
   }
+
+  // My attempt to trying to fetch the chip ID:
+    uint8_t commandToFetchID[2] = {0x9F,0};
+    uint8_t chipId[2] = {0}
+
+    HAL_StatusTypeDef errorSendCommand = HAL_XSPI_Transmit(hospi, commandToFetchID, HAL_XSPI_TIMEOUT_DEFAULT_VALUE);
+
+    HAL_StatusTypeDef errorReceiveCommand = HAL_XSPI_Receive(hospi, chipId, HAL_XSPI_TIMEOUT_DEFAULT_VALUE);
+
 
   /* Configure automatic polling mode to wait for write enabling ---- */
   sCommand.Instruction = READ_STATUS_REG_CMD;
