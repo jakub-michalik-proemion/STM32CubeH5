@@ -548,11 +548,13 @@ static void OSPI_OctalModeCfg(XSPI_HandleTypeDef *hospi)
     Error_Handler();
   }
 
-//
-//    uint8_t resultID[2] = {0x9F,0};
-//    HAL_StatusTypeDef result = HAL_XSPI_Transmit(hospi, resultID, HAL_XSPI_TIMEOUT_DEFAULT_VALUE);
-//
-//    HAL_StatusTypeDef result1 = HAL_XSPI_Receive(hospi, resultID, HAL_XSPI_TIMEOUT_DEFAULT_VALUE);
+  // My attempt to trying to fetch the chip ID:
+    uint8_t commandToFetchID[2] = {0x9F,0};
+    uint8_t chipId[2] = {0}
+
+    HAL_StatusTypeDef errorSendCommand = HAL_XSPI_Transmit(hospi, commandToFetchID, HAL_XSPI_TIMEOUT_DEFAULT_VALUE);
+
+    HAL_StatusTypeDef errorReceiveCommand = HAL_XSPI_Receive(hospi, chipId, HAL_XSPI_TIMEOUT_DEFAULT_VALUE);
 
 
   /* Configure automatic polling mode to wait for write enabling ---- */
